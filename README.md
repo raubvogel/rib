@@ -41,7 +41,7 @@ buildarocky   latest         4af69d17a78d   4 hours ago     2.41GB
 ```
 
 and podman taking a bit more. These are seriously large images; my normal ones
-temd to be under 50MB.
+usually are under 50MB.
 
 ```bash
 REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
