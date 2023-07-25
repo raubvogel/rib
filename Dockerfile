@@ -1,9 +1,4 @@
-FROM rockylinux:8-minimal
-
-ENV DEVUSER iamdeving
-ENV DEVID 1995
-ENV EXTGID 1999
-ENV GOPATH /home/$DEVUSER/devtools-main
+FROM rockylinux:8-minimal AS devstuff
 
 ################## BEGIN INSTALLATION ######################
 
@@ -57,6 +52,13 @@ RUN microdnf install -y \
     nginx
 
 ##################### INSTALLATION END #####################
+
+FROM devstuff AS devenv
+
+ENV DEVUSER iamdeving
+ENV DEVID 1995
+ENV EXTGID 1999
+ENV GOPATH /home/$DEVUSER/devtools-main
 
 # Create $DEVUSER
 RUN useradd -m --shell /bin/bash -u $DEVID $DEVUSER
