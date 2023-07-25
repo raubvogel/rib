@@ -34,18 +34,18 @@ running out of space. So I had to split the build process
 as of now, we are talking about 2.41GB with docker
 
 ```bash
-REPOSITORY              TAG            IMAGE ID       CREATED         SIZE
-buildarocky             latest         4af69d17a78d   4 hours ago     2.41GB
-<none>                  <none>         880008159c88   2 days ago      2.41GB
-<none>                  <none>         74267c2382ae   2 days ago      2.41GB
+REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
+buildarocky   latest         4af69d17a78d   4 hours ago     2.41GB
+<none>        <none>         880008159c88   2 days ago      2.41GB
+<none>        <none>         74267c2382ae   2 days ago      2.41GB
 ```
 
 and podman taking a bit more. These are seriously large images; my normal ones
 temd to be under 50MB.
 
 ```bash
-REPOSITORY              TAG            IMAGE ID       CREATED         SIZE
-buildarocky             latest         4af69d17a78d   22 hours ago    2.55GB
+REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
+buildarocky   latest         4af69d17a78d   22 hours ago    2.55GB
 ```
 
 I am still trying to find ways shrink it down.
