@@ -83,7 +83,8 @@ docker run -i --rm --privileged -v ~/dev/c/packagetest:/home/iamdeving/build -e 
 ```
 
 Once it is running, you can test it by following the examples shown in 
-a [(blog article](https://csrc.nist.gov/pubs/ir/8481/ipdr) put together
+a [blog article](https://skip.linuxdn.org/blog.html#005_Rocky5_BuildLab_Part1
+) put together
 by one of the developers. I myself use it when testing this container.
 If you are running the first example (building `bash`), and are following
 my directory structure, put everything inside the `~/build` directory instead
@@ -91,7 +92,7 @@ of the homedir. Then you will unleash mock (note I am being explicit about the
 paths):
 
 ```bash
-[iamdeving@626bc2975526 build]$ mock -v --resultdir=~/build/rockybuild/bash   --buildsrpm --spec=~/build/rockysrc/bash/SPECS/bash.spec  --sources=~/build/rockysrc/bash/SOURCES/
+mock -v --resultdir=~/build/rockybuild/bash   --buildsrpm --spec=~/build/rockysrc/bash/SPECS/bash.spec  --sources=~/build/rockysrc/bash/SOURCES/
 ``` 
 
 This will take a while; I may add the time here later.
