@@ -29,26 +29,6 @@ The simplest way to build it is doing
 docker build -t buildarocky .
 ```
 
-**Warning:** building this image takes a lot of space, as in I was
-running out of space. So I had to split the build process
-as of now, we are talking about 2.41GB with docker
-
-```bash
-REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
-buildarocky   latest         4af69d17a78d   4 hours ago     2.41GB
-<none>        <none>         880008159c88   2 days ago      2.41GB
-<none>        <none>         74267c2382ae   2 days ago      2.41GB
-```
-
-and podman taking a bit more. These are seriously large images; my normal ones
-usually are under 50MB.
-
-```bash
-REPOSITORY    TAG            IMAGE ID       CREATED         SIZE
-buildarocky   latest         4af69d17a78d   22 hours ago    2.55GB
-```
-
-I am still trying to find ways shrink it down.
 
 ### There is no Containerfile here! Why you do not make this podman compatible?
 
@@ -65,16 +45,75 @@ But, you do not have to be tied down to using default filenames. You can
 feed the build process a custom file using the `-f` option:
 
 ```bash
-podman build -t buildarocky -f Dockerfile
+podman build -t buildarocky -f Dockerfile .
 ```
 
 Don't like to call it `Dockerfile`? Call it `secondbanana`! It does not care!
 
 ```bash
-podman build -t buildarocky -f secondbanana
+podman build -t buildarocky -f secondbanana .
 ```
 
 ## Using it.
 
-You will want to pass a volume to it. I will fill this session later.
+We are not running the container as an app like they say you should.
+Instead, we will be running a shell through it.
 
+You will want to pass the directory you use to develop your backaged as a 
+volume to the container; for this example, let's call it `~/dev/c/packagetest`.
+Like others, I try not to run containers as root; the user (inside the 
+container) that is created to do the building deed is called `lamdeving`.
+Don't like it? Edit the Dockerfile and change it!
+
+Now, the directory inside the container that the volume is mounted to is
+`/home/iamdeving/build`; you can change it on the command line if 
+it pleases you. For instance, some will prefer to use `/home/iamdeving` so 
+to keep their history and envornment. It is up to you.
+
+**NOTE:** Unfortunately as of now you must run it using the `--privileged`
+option because of some mounts the `mock` package does. 
+I too do not like it but for now we need to be insecure like that, both in
+`docker` and `podman`.
+
+```bash
+docker run -i --rm --privileged -v ~/dev/c/packagetest:/home/iamdeving/build -e EXTGID=$(id -g) -t buildarocky bash
+```
+
+Once it is running, you can test it by following the examples shown in 
+a [(blog article](https://csrc.nist.gov/pubs/ir/8481/ipdr) put together
+by one of the developers. I myself use it when testing this container.
+If you are running the first example (building `bash`), and are following
+my directory structure, put everything inside the `~/build` directory instead
+of the homedir. Then you will unleash mock (note I am being explicit about the
+paths):
+
+```bash
+[iamdeving@626bc2975526 build]$ mock -v --resultdir=~/build/rockybuild/bash   --buildsrpm --spec=~/build/rockysrc/bash/SPECS/bash.spec  --sources=~/build/rockysrc/bash/SOURCES/
+``` 
+
+This will take a while; I may add the time here later.
+If all goes well, you should end up with a new shiny package and some logs
+(the `nobody` happens because this directory is in a NFS fileshare):
+
+
+```bash
+[iamdeving@626bc2975526 build]$ ls -lh rockybuild/bash/                    
+total 9.2M                                                                      
+-rw-r--r-- 1 nobody extgroup 9.1M Aug 31 17:25 bash-4.4.20-4.el8.src.rpm    
+-rw-rw-r-- 1 nobody extgroup 1.2K Aug 31  2023 build.log                   
+-rw-rw-r-- 1 nobody extgroup 1.5K Aug 31  2023 hw_info.log                 
+-rw-rw-r-- 1 nobody extgroup  67K Aug 31  2023 root.log                     
+-rw-rw-r-- 1 nobody extgroup 1.1K Aug 31  2023 state.log                    
+[iamdeving@626bc2975526 build]$
+```
+
+If not, go back and see if you find where it went boink. If you can't, ask
+in the dev support for, say, Fedora or Rocky Linux.
+
+## Cleaning up after yourself
+
+After you are done, just exit the container; it will die automagically but
+your work will not be lost, as it is in the dev directory you fed to the
+container as a volume.
+I suggest to update the container's packages every so often unless you have
+a reason to keep the versions around.
