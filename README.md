@@ -71,9 +71,12 @@ it pleases you. For instance, some will prefer to use `/home/iamdeving` so
 to keep their history and envornment. It is up to you.
 
 **NOTE:** Unfortunately as of now you must run it using the `--privileged`
-option because of some mounts the `mock` package does. 
-I too do not like it but for now we need to be insecure like that, both in
-`docker` and `podman`.
+option because of some mounts the `mock` package do need that. 
+I too do not like it but for now we need to run the container in an insecure 
+manner like that, both in `docker` and `podman`.
+The only good thing is this is a short-lived container without exposed 
+network ports, so the kind of attacks it is exposed to is not as large
+as some may claim.
 
 ```bash
 docker run -i --rm --privileged -v ~/dev/c/packagetest:/home/iamdeving/build -e EXTGID=$(id -g) -t buildarocky bash
