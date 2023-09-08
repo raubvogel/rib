@@ -2,7 +2,7 @@
 set -e
 
 groupadd -g $EXTGID extgroup
-usermod -G extgroup,mock -a $DEVUSER 
+usermod -G extgroup -a $DEVUSER 
 
 su - $DEVUSER
 
