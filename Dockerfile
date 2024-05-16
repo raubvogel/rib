@@ -1,3 +1,10 @@
+# rib: small mock-based build environment
+#
+# Run it as:
+#   docker run -i --rm --privileged \
+#   -v /path/to/buildir:/home/iamdeving/build -e EXTGID=$(id -g) \
+#   -t rib bash
+
 FROM rockylinux:8-minimal AS devstuff
 
 ################## BEGIN INSTALLATION ######################
@@ -24,11 +31,11 @@ RUN microdnf install -y \
 # Create $DEVUSER
 RUN useradd -m --shell /bin/bash -g mock -u $DEVID $DEVUSER
 
-# If you need to be root inside container, comment the next lines out
-USER ${DEVUSER}
-WORKDIR /home/${DEVUSER}
-
 # Put the entrypoint script somewhere we can find
 COPY docker-entrypoint.sh /entrypoint.sh
 RUN chmod 0700 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
+
+# If you need to be root inside container, comment the next lines out
+# USER ${DEVUSER}
+# WORKDIR /home/${DEVUSER}

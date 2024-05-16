@@ -1,4 +1,4 @@
-# buildarocky
+# Rib
 
 Here we go again, using containers to create an environment to build things;
 As some of my repos hinted at, I seem to do that a lot.
@@ -26,7 +26,7 @@ being put in it.
 
 The simplest way to build it is doing
 ```bash
-docker build -t buildarocky .
+docker build -t rib .
 ```
 
 
@@ -38,20 +38,20 @@ If you want, rename the `Dockerfile` to `Containerfile`, or make it an alias,
 and then it is business as usual:
 
 ```bash
-podman build -t buildarocky .
+podman build -t rib .
 ```
 
 But, you do not have to be tied down to using default filenames. You can
 feed the build process a custom file using the `-f` option:
 
 ```bash
-podman build -t buildarocky -f Dockerfile .
+podman build -t rib -f Dockerfile .
 ```
 
 Don't like to call it `Dockerfile`? Call it `secondbanana`! It does not care!
 
 ```bash
-podman build -t buildarocky -f secondbanana .
+podman build -t rib -f secondbanana .
 ```
 
 ## Using it.
@@ -71,7 +71,8 @@ it pleases you. For instance, some will prefer to use `/home/iamdeving` so
 to keep their history and envornment. It is up to you.
 
 **NOTE:** Unfortunately as of now you must run it using the `--privileged`
-option because of some mounts the `mock` package do need that. 
+option because of some mounts the `mock` package do need that, and I have not 
+figured out a workaround yet. 
 I too do not like it but for now we need to run the container in an insecure 
 manner like that, both in `docker` and `podman`.
 The only good thing is this is a short-lived container without exposed 
@@ -79,7 +80,7 @@ network ports, so the kind of attacks it is exposed to is not as large
 as some may claim.
 
 ```bash
-docker run -i --rm --privileged -v ~/dev/c/packagetest:/home/iamdeving/build -e EXTGID=$(id -g) -t buildarocky bash
+docker run -i --rm --privileged -v ~/dev/c/packagetest:/home/iamdeving/build -e EXTGID=$(id -g) -t rib bash
 ```
 
 Once it is running, you can test it by following the examples shown in 
@@ -121,3 +122,7 @@ your work will not be lost, as it is in the dev directory you fed to the
 container as a volume.
 I suggest to update the container's packages every so often unless you have
 a reason to keep the versions around.
+
+## Why did you rename it as rib?
+
+Rib is a lightweight version of Mock. 
